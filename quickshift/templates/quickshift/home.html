@@ -1,0 +1,529 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+    <style>
+        nav {
+            background-color: rgba(138, 138, 138, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2.5rem;
+        }
+
+        .logo {
+            height: 64px;
+        }
+
+        ul {
+            display: flex;
+            gap: 2.5rem;
+            list-style-type: none;
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: black;
+        }
+
+        ul li a {
+            text-decoration: none;
+            color: black;
+        }
+
+        ul li a:hover {
+            color: #0063d4;
+        }
+
+        .signup-button {
+            background-color: #0063d4;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.25rem;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .signup-button:hover {
+            background-color: #0063d4;
+        }
+
+        @media (max-width: 768px) {
+            ul {
+                display: none;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1E1E1E;
+            background-color: #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 80px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+
+        .form-section {
+            width: 100%;
+            margin-bottom: 128px;
+        }
+
+        .form-section h1 {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 500px;
+            padding: 12px 16px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border: 1px solid #8A8A8A;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .button {
+            display: block;
+            width: 200px;
+            background-color: #0063d4;
+            color: #f2f2f2;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-left: 180px;
+            margin-top: 40px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0063d4;
+        }
+
+        .image-section {
+            width: 800px;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: auto;
+        }
+
+        .services-section {
+            width: 100%;
+            min-height: 100vh;
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 80px;
+        }
+
+        .service-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 60px 120px;
+            margin-bottom: 100px;
+        }
+
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .service-item img {
+            margin-top: 20px;
+            border: 10px solid rgb(168, 168, 168);
+            border-radius: 8px;
+            padding: 5px;
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .service-name {
+            margin-top: 16px;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .why-section {
+            padding: 80px 24px;
+            text-align: center;
+            margin-top: -60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 64px 64px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+            gap: 24px;
+        }
+
+        .feature-item img {
+            width: 64px;
+            height: 64px;
+        }
+
+        .feature-title {
+            color: #0063d4;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            color: #8A8A8A;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .section-subtitle {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 112px 0 40px;
+        }
+
+        .call-to-action {
+            background-color: rgba(161, 161, 251, 0.3);
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 48px 32px;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #0063d4;
+            color: black;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #0063d4;
+        }
+
+        .footer {
+            background-color: rgba(138, 138, 138, 0.25);
+            color: #4B4B4B;
+            padding-top: 48px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-logo img {
+            max-width: 180px;
+        }
+
+        .footer-heading {
+            color: #0063d4;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .footer-column p {
+            margin-bottom: 8px;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .footer-socials img {
+            height: 32px;
+            width: 32px;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: block;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+            display: block;
+            color: #4B4B4B;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .signout {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .para {
+            font-size: large;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo-container">
+        <img src="{% static 'images/logo (3).png' %}" class="logo" />
+    </div>
+    <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'service' %}">Services</a></li>
+    </ul>
+
+    <button class="signup-button">
+        <a href="{% url 'logout' %}" class="signout">Sign Out</a>
+    </button>
+</nav>
+
+<!-- Success Messages -->
+{% if messages %}
+<div style="padding: 1rem; text-align: center;">
+    {% for message in messages %}
+        <div class="alert" style="
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container">
+    <div class="form-section">
+        <h1>Predict The Fare Price</h1>
+
+        <p class="para">
+            Our intelligent transportation price prediction<br /> platform provides accurate fare estimates for autos,
+            cabs, bikes, and more <br />based on real-time traffic, distance, and location data. Easily compare
+            different transport modes,<br /> avoid hidden charges, and make cost-efficient travel decisions — whether
+            <br />you're commuting daily or planning a one-time trip
+        </p>
+
+        <a href="{% url 'service' %}">
+            <button class="button">Predict Fare</button>
+        </a>
+    </div>
+
+    <div class="image-section">
+        <img src="{% static 'images/ChatGPT Image May 2, 2025, 12_02_04 PM.png' %}" alt="ChatGPT Logo" />
+    </div>
+</div>
+
+<section class="services-section">
+    <h2 class="section-title">Our Services</h2>
+
+    <div class="service-row">
+        <div class="service-item">
+            <img src="{% static 'images/ChatGPT_Image_May_2__2025__12_13_44_PM-removebg-preview.png' %}" alt="Share Auto">
+            <span class="service-name">Share Auto</span>
+        </div>
+        <div class="service-item">
+            <img src="{% static 'images/ChatGPT_Image_May_2__2025__12_13_44_PM-removebg-preview.png' %}" alt="Auto">
+            <span class="service-name">Auto</span>
+        </div>
+        <div class="service-item">
+            <img src="{% static 'images/cab.jpg' %}" alt="Cab Economy">
+            <span class="service-name">Cab Economy</span>
+        </div>
+    </div>
+
+    <div class="service-row">
+        <div class="service-item">
+            <img src="{% static 'images/cab.jpg' %}" alt="Cab Premium">
+            <span class="service-name">Cab Premium</span>
+        </div>
+        <div class="service-item">
+            <img src="{% static 'images/bike.jpg' %}" alt="Bike">
+            <span class="service-name">Bike</span>
+        </div>
+    </div>
+
+</section>
+
+<section class="why-section">
+    <h2 class="section-title">Why Choose US ?</h2>
+
+    <div class="features-grid">
+        <div class="feature-item">
+            <img src="{% static 'images/affordable.jpg' %}" alt="Affordable Pricing" />
+            <div>
+                <h4 class="feature-title">Affordable Pricing</h4>
+                <p class="feature-text">Transparent and competitive – no hidden fees.</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <img src="{% static 'images/booking.png' %}" alt="Real-Time Booking" />
+            <div>
+                <h4 class="feature-title">Real-Time Booking</h4>
+                <p class="feature-text">Book anytime, anywhere with our user-friendly app.</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <img src="{% static 'images/verified.png' %}" alt="Verified Drivers" />
+            <div>
+                <h4 class="feature-title">Verified Drivers</h4>
+                <p class="feature-text">Ride with confidence. Safety is our top priority.</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <img src="{% static 'images/support.jpg' %}" alt="24/7 Support" />
+            <div>
+                <h4 class="feature-title">24/7 Support</h4>
+                <p class="feature-text">We’re here whenever you need us.</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-subtitle">Start Your Journey Now!</h2>
+
+    <div class="call-to-action">
+        <p class="cta-text">
+            Explore. Commute. Connect.<br />
+            Let’s ride the future of urban transport – together.
+        </p>
+        <a href="services.html" class="cta-button">Book Now</a>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-column">
+            <div class="footer-logo">
+                <img src="{% static 'images/logo (3).png' %}" alt="QuickShift Logo" />
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <h4 class="footer-heading">INFORMATION</h4>
+            <ul class="footer-links">
+                <li>Home</li>
+                <li>Services</li>
+                <li>Book a Ride</li>
+                <li>About Us</li>
+                <li>Contact</li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h4 class="footer-heading">CONTACT US</h4>
+            <p>Customer Support: +91-XXXXXXXXXX</p>
+            <p>Email: support@yourbrand.com</p>
+        </div>
+
+        <div class="footer-column">
+            <h4 class="footer-heading">FOLLOW US</h4>
+            <div class="footer-socials">
+                <img src="{% static 'images/Facebook.png' %}" alt="Facebook" />
+                <img src="{% static 'images/X.png' %}" alt="Twitter" />
+                <img src="{% static 'images/YouTube.png' %}" alt="YouTube" />
+                <img src="{% static 'images/Instagram.png' %}" alt="Instagram" />
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 QuickShift. All rights reserved.
+    </div>
+</footer>
+
+<script>
+    setTimeout(function() {
+        var alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            alert.style.display = 'none';
+        });
+    }, 3000);
+</script>
+
+</body>
+</html>

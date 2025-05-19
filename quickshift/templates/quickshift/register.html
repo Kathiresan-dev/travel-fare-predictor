@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Make all inputs consistent */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px; /* Base padding for all */
+    margin: 8px 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Critical! */
+}
+
+/* For password input only, add padding-right for the eye icon */
+.password-container input {
+    padding-right: 40px; /* Makes space for icon */
+}
+
+/* Eye icon positioning */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+
+
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0063d4;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #999999;
+            cursor: not-allowed;
+        }
+
+        button:hover:enabled {
+            background-color: #0053b3;
+        }
+
+        .login {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .password-rules {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: 5px;
+            line-height: 1.3;
+            display: none;
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 10px; margin-bottom: 10px; border-radius: 5px; color: white;
+                {% if message.tags == 'success' %}
+                  background-color: #38a169;
+                {% elif message.tags == 'error' %}
+                  background-color: #e53e3e;
+                {% elif message.tags == 'warning' %}
+                  background-color: #dd6b20;
+                {% else %}
+                  background-color: #3182ce;
+                {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        <div style="color: red; margin-bottom: 10px; font-size: 0.9rem;">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <h2>Sign up</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required value="{{ form.username.value|default_if_none:'' }}">
+            {% if form.username.errors %}
+                <div class="error-message">
+                    {{ form.username.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email" required value="{{ form.email.value|default_if_none:'' }}">
+            {% if form.email.errors %}
+                <div class="error-message">
+                    {{ form.email.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group password-container">
+            <input type="password" name="password" id="passwordInput" placeholder="Password" required>
+            <i id="eyeIcon1" class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility('passwordInput', 'eyeIcon1')"></i>
+            <div class="password-rules" id="passwordRules">
+                <span id="length" class="invalid">❌ At least 8 characters</span><br>
+                <span id="letter" class="invalid">❌ Contains a letter (A-Z)</span><br>
+                <span id="number" class="invalid">❌ Contains a number (0-9)</span><br>
+                <span id="special" class="invalid">❌ Contains a special character (!@#$...)</span>
+            </div>
+            {% if form.password.errors %}
+                <div class="error-message">
+                    {{ form.password.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group password-container">
+            <input type="password" name="confirm_password" id="confirmPasswordInput" placeholder="Confirm Password" required>
+            <i id="eyeIcon2" class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility('confirmPasswordInput', 'eyeIcon2')"></i>
+            <div class="error-message" id="confirmErrorMsg" style="display: none;">
+                Passwords do not match.
+            </div>
+            {% if form.confirm_password.errors %}
+                <div class="error-message">
+                    {{ form.confirm_password.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" id="submitBtn" disabled>Sign up</button>
+    </form>
+
+    <div class="login">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+    </div>
+</div>
+
+<script>
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    const lengthRule = document.getElementById('length');
+    const letterRule = document.getElementById('letter');
+    const numberRule = document.getElementById('number');
+    const specialRule = document.getElementById('special');
+    const passwordRules = document.getElementById('passwordRules');
+    const submitBtn = document.getElementById('submitBtn');
+    const confirmErrorMsg = document.getElementById('confirmErrorMsg');
+
+    function validatePassword() {
+        const value = passwordInput.value;
+
+        const lengthValid = value.length >= 8;
+        const letterValid = /[A-Za-z]/.test(value);
+        const numberValid = /\d/.test(value);
+        const specialValid = /[^A-Za-z0-9]/.test(value);
+
+        updateRule(lengthRule, lengthValid);
+        updateRule(letterRule, letterValid);
+        updateRule(numberRule, numberValid);
+        updateRule(specialRule, specialValid);
+
+        return lengthValid && letterValid && numberValid && specialValid;
+    }
+
+    function validateConfirmPassword() {
+        const passwordValue = passwordInput.value;
+        const confirmValue = confirmPasswordInput.value;
+        const isMatch = passwordValue === confirmValue && confirmValue.length > 0;
+
+        if (confirmValue.length > 0 && !isMatch) {
+            confirmErrorMsg.style.display = 'block';
+        } else {
+            confirmErrorMsg.style.display = 'none';
+        }
+
+        return isMatch;
+    }
+
+    function updateRule(element, isValid) {
+        if (isValid) {
+            element.classList.remove('invalid');
+            element.classList.add('valid');
+            element.innerHTML = '✅ ' + element.textContent.slice(2);
+        } else {
+            element.classList.remove('valid');
+            element.classList.add('invalid');
+            element.innerHTML = '❌ ' + element.textContent.slice(2);
+        }
+    }
+
+    function toggleSubmitButton() {
+        const isPasswordValid = validatePassword();
+        const isConfirmValid = validateConfirmPassword();
+        submitBtn.disabled = !(isPasswordValid && isConfirmValid);
+    }
+
+    passwordInput.addEventListener('input', function () {
+        passwordRules.style.display = passwordInput.value.length > 0 ? 'block' : 'none';
+        validatePassword();
+        validateConfirmPassword();
+        toggleSubmitButton();
+    });
+
+    passwordInput.addEventListener('focus', function () {
+        if (passwordInput.value.length > 0) {
+            passwordRules.style.display = 'block';
+        }
+    });
+
+    passwordInput.addEventListener('blur', function () {
+        passwordRules.style.display = 'none';
+    });
+
+    confirmPasswordInput.addEventListener('input', function () {
+        validateConfirmPassword();
+        toggleSubmitButton();
+    });
+
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+
+</body>
+</html>

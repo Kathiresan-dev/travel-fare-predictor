@@ -1,0 +1,338 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        color: #4B4B4B;
+    }
+
+    .about-container {
+        padding: 3rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .about-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-description {
+        font-size: 1.1rem;
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+        line-height: 1.6;
+    }
+
+    .about-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        align-items: center;
+        margin-bottom: 3rem;
+    }
+
+    .about-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 300px;
+    }
+
+    .icon-circle {
+        background-color: #0063d4;
+        color: #1e1e1e;
+        font-weight: bold;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .highlight-text {
+        color: #0063d4;
+        font-style: italic;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .text {
+        padding: 0 1rem;
+        line-height: 1.5;
+    }
+
+    .team-section {
+        margin-top: 3rem;
+    }
+
+    .team-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .team-image {
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+
+    @media (min-width: 768px) {
+        .about-sections {
+            flex-direction: row;
+            justify-content: center;
+            gap: 4rem;
+        }
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .footer {
+        background-color: rgba(138, 138, 138, 0.25);
+        color: #4B4B4B;
+        padding-top: 48px;
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .footer-logo img {
+        max-width: 180px;
+    }
+
+    .footer-heading {
+        color: #0063d4;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+
+    .footer-column p {
+        margin-bottom: 8px;
+    }
+
+    .footer-socials {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .footer-socials img {
+        height: 32px;
+        width: 32px;
+        cursor: pointer;
+    }
+
+    .footer-bottom {
+        background-color: #ffffff;
+        text-align: center;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+
+    .footer-links li {
+        margin-bottom: 10px;
+        display: block;
+        color: #4B4B4B;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    nav {
+        background-color: rgba(138, 138, 138, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+    }
+
+    .logo {
+        height: 64px;
+    }
+
+    ul {
+        display: flex;
+        gap: 2.5rem;
+        list-style-type: none;
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: black;
+    }
+
+    ul li a {
+        text-decoration: none;
+        color: black;
+    }
+
+    ul li a:hover {
+        color: #0063d4;
+    }
+
+    .signup-button {
+        background-color: #0063d4;
+        color: white;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .signup-button:hover {
+        background-color: #0063d4;
+    }
+
+    .signout {
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+
+    @media (max-width: 768px) {
+        ul {
+            display: none;
+        }
+    }
+</style>
+
+<body>
+    <nav>
+        <div class="logo-container">
+            <img src="{% static 'images/logo (3).png' %}" alt="QuickShift Logo" class="logo" />
+        </div>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About us</a></li>
+            <li><a href="{% url 'service' %}">Services</a></li>
+        </ul>
+        
+        <button class="signup-button">
+            <a href="{% url 'logout' %}" class="signout">Sign Out</a>
+        </button>
+
+    </nav>
+
+    <div class="about-container">
+        <h2 class="about-title">About us</h2>
+        <p class="about-description">
+            An end-to-end web app combining frontend, backend, data science, and
+            business analysis to deliver real-time insights. Features include data
+            visualization, predictive analytics, and interactive dashboards for
+            smarter decision-making.
+        </p>
+
+        <div class="about-sections">
+            <div class="about-block">
+                <div class="icon-circle">Mission</div>
+                <p class="highlight-text">Our Mission</p>
+                <p class="text">
+                    To equip students with practical skills in tech and analytics through real-world project
+                    development.
+                </p>
+            </div>
+            <div class="about-block">
+                <div class="icon-circle">Vision</div>
+                <p class="highlight-text">Our Vision</p>
+                <p class="text">
+                    To foster future-ready professionals who merge coding with data-driven thinking.
+                </p>
+            </div>
+            <div class="about-block">
+                <div class="icon-circle">Goals</div>
+                <p class="highlight-text">Our Goal</p>
+                <p class="text">
+                    Build full-stack projects using real data, solve business problems, and develop a standout
+                    portfolio.
+                </p>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h1 class="team-title">Our Team</h1>
+            <img src="{% static "images/ourteam.png" %}" alt="Our Team" class="team-image" />
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <img src="{% static "images/logo (3).png" %}" alt="QuickShift Logo" />
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h4 class="footer-heading">INFORMATION</h4>
+                <ul class="footer-links">
+                    <li>Home</li>
+                    <li>Services</li>
+                    <li>Book a Ride</li>
+                    <li>About Us</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4 class="footer-heading">CONTACT US</h4>
+                <p>Customer Support: +91-XXXXXXXXXX</p>
+                <p>Email: support@yourbrand.com</p>
+            </div>
+
+            <div class="footer-column">
+                <h4 class="footer-heading">FOLLOW US</h4>
+                <div class="footer-socials">
+                    <img src="{% static "images/Facebook.png" %}" alt="Facebook" />
+                    <img src="{% static "images/X.png" %}" alt="Twitter" />
+                    <img src="{% static "images/YouTube.png" %}" alt="YouTube" />
+                    <img src="{% static "images/Instagram.png" %}" alt="Instagram" />
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 QuickShift. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>

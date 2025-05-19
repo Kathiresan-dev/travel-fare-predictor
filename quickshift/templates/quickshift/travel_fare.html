@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Fare Predictor</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+        .container { background: white; padding: 20px; border-radius: 10px; max-width: 700px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; }
+
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: white;
+            font-size: 1rem;
+        }
+
+        /* Custom select dropdown arrow */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 16px;
+            padding-right: 35px; /* space for the arrow */
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background: #0063d4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        input[type="submit"]:hover { background: #0056b3; }
+
+        .result { margin-top: 20px; }
+        .error { color: red; margin-top: 20px; }
+        #map { height: 300px; border-radius: 10px; margin-top: 20px; }
+
+        nav {
+            background-color: rgba(138, 138, 138, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2.5rem;
+            margin-bottom:30px;
+        }
+        .logo { height: 64px; }
+        ul { display: flex; gap: 2.5rem; list-style-type: none; font-weight: 600; font-size: 1.125rem; color: black; }
+        ul li a { text-decoration: none; color: black; }
+        ul li a:hover { color: #0063d4; }
+        .signup-button { background-color: #0063d4; color: white; font-weight: 600; padding: 0.5rem 1.25rem; border: none; border-radius: 9999px; cursor: pointer; text-decoration: none; }
+        .signup-button:hover { background-color: #0063d4; }
+        .signout { text-decoration: none; color: #ffffff; }
+
+        @media (max-width: 768px) {
+            ul { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo-container">
+        <img src="{% static 'images/logo (3).png' %}" class="logo" />
+    </div>
+    <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'service' %}">Services</a></li>
+    </ul>
+    <button class="signup-button">
+        <a href="{% url 'logout' %}" class="signout">Sign Out</a>
+    </button>
+</nav>
+
+<div class="container">
+    <h1>Travel Fare Predictor</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-field">
+            <input type="text" name="pickup_location" placeholder="Enter pickup location" required value="{{ pickup_location|default:'' }}">
+        </div>
+        <div class="form-field">
+            <input type="text" name="dropoff_location" placeholder="Enter dropoff location" required value="{{ dropoff_location|default:'' }}">
+        </div>
+        <div class="form-field">
+            <select name="vehicle_type" required>
+                <option value="">-- Select vehicle --</option>
+                <option value="bike" {% if selected_vehicle == 'bike' %}selected{% endif %}>Bike</option>
+                <option value="auto" {% if selected_vehicle == 'auto' %}selected{% endif %}>Auto</option>
+                <option value="car" {% if selected_vehicle == 'car' %}selected{% endif %}>Car</option>
+            </select>
+        </div>
+        <input type="submit" value="Predict Fare">
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <h2>Estimated Fare: ₹{{ prediction.inr }}</h2>
+        <p><strong>Vehicle:</strong> {{ vehicle_type|title }}</p>
+        <p>Distance: {{ distance }} km</p>
+        <p>Duration: {{ duration }} minutes</p>
+        <p>Weather: {{ prediction.weather }}
+            <img src="https://openweathermap.org/img/wn/{{ prediction.weather_icon }}@2x.png" alt="Weather Icon" style="vertical-align:middle;">
+        </p>
+        <p>Surge Multiplier: {{ surge_multiplier }}</p>
+        <p>Last Updated: {{ last_updated }}</p>
+
+        <div id="map"></div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+</div>
+
+{% if pickup_coords and dropoff_coords %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const pickup = [{{ pickup_coords.0 }}, {{ pickup_coords.1 }}];
+    const dropoff = [{{ dropoff_coords.0 }}, {{ dropoff_coords.1 }}];
+
+    const map = L.map('map').setView(pickup, 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker(pickup).addTo(map).bindPopup("Pickup").openPopup();
+    L.marker(dropoff).addTo(map).bindPopup("Dropoff");
+
+    fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+        method: 'POST',
+        headers: {
+            'Authorization': '5b3ce3597851110001cf62482b8e0b11111c4f2fb8fe26b3d47d74c1',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            coordinates: [
+                [pickup[1], pickup[0]],
+                [dropoff[1], dropoff[0]]
+            ]
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Failed to fetch route");
+        return response.json();
+    })
+    .then(data => {
+        const routeCoords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+        const routeLine = L.polyline(routeCoords, { color: 'blue' }).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+    })
+    .catch(err => {
+        console.error("Route error:", err);
+        alert("Unable to load driving route");
+    });
+</script>
+{% endif %}
+
+</body>
+</html>
